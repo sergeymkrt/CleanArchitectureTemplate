@@ -1,0 +1,6 @@
+﻿services:
+  cleanarchitecturetemplate.webapi:
+    image: cleanarchitecturetemplate.webapi
+    build:
+      context: .
+      dockerfile: CleanArchitectureTemplate.WebApi/Dockerfile
