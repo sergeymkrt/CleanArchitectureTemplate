@@ -11,11 +11,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("Users");
         builder.HasIndex(c => c.Email)
             .IsUnique();
-
-        builder.Property(x => x.FullName)
-            .HasComputedColumnSql("CONCAT(LastName, ' ', FirstName)", stored: true)
-            .HasMaxLength(257);
-
+        
         #region Seed Data
         // Add system user
         builder.HasData(

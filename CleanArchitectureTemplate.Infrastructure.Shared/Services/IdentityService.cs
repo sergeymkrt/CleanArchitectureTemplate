@@ -8,14 +8,10 @@ namespace CleanArchitectureTemplate.Infrastructure.Shared.Services;
 public class IdentityService : IIdentityService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILookupService _lookupService;
 
-    public IdentityService(
-        IHttpContextAccessor httpContextAccessor,
-        ILookupService lookupService)
+    public IdentityService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _lookupService = lookupService;
     }
 
     public long? Id => Convert.ToInt64(_httpContextAccessor.HttpContext?.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value ?? string.Empty);

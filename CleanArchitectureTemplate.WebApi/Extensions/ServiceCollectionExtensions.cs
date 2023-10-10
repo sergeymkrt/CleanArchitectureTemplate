@@ -201,9 +201,6 @@ public static class ServiceCollectionExtensions
         services.AddSqlServerDbContext<ApplicationDbContext>(
             configuration.GetConnectionString("DefaultConnection"),
             environment.IsDevelopment());
-
-        // services.AddScoped<IDbInitializer, DbInitializer>();
-
         return services;
     }
     

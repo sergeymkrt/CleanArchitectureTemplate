@@ -1,9 +1,39 @@
-﻿services:
+﻿networks:
+    cleanarchitecturetemplate:
+        driver: bridge
+
+services:
+  cleanarchitecturetemplate.database:
+    image: postgres:latest
+    container_name: cleanarchitecturetemplate.database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CleanArchitectureDB
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - template_data:/var/lib/postgresql/data
+    networks:
+      - cleanarchitecturetemplate
+
   cleanarchitecturetemplate.webapi:
     image: cleanarchitecturetemplate.webapi
+    container_name: cleanarchitecturetemplate.webapi
+    depends_on:
+      - cleanarchitecturetemplate.database
     build:
       context: .
       dockerfile: CleanArchitectureTemplate.WebApi/Dockerfile
+    networks:
+        - cleanarchitecturetemplate
     ports:
         - "5000:80"
         - "5001:443"
+  
+          
+volumes:
+    template_data:
+      
+    

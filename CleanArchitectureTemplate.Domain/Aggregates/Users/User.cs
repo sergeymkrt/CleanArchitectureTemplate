@@ -21,8 +21,7 @@ public class User : BaseEntity<long>, IAggregateRoot
     [MaxLength(128)]
     public string Email { get; protected set; }
 
-    [SearchColumn]
-    public string FullName { get; protected set; }
+    public string FullName => $"{LastName} {FirstName}";
 
     public virtual ICollection<AuditLog> AuditLogs { get; protected set; }
 
