@@ -44,5 +44,59 @@ namespace CleanArchitectureTemplate.Domain.Resources {
                 resourceCulture = value;
             }
         }
+        
+        internal static string Failed {
+            get {
+                return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        internal static string Success {
+            get {
+                return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessfullyCreated {
+            get {
+                return ResourceManager.GetString("SuccessfullyCreated", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessfullyUpdated {
+            get {
+                return ResourceManager.GetString("SuccessfullyUpdated", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessfullyDeleted {
+            get {
+                return ResourceManager.GetString("SuccessfullyDeleted", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessfullyUploaded {
+            get {
+                return ResourceManager.GetString("SuccessfullyUploaded", resourceCulture);
+            }
+        }
+        
+        internal static string NotExists {
+            get {
+                return ResourceManager.GetString("NotExists", resourceCulture);
+            }
+        }
+        
+        internal static string Duplication {
+            get {
+                return ResourceManager.GetString("Duplication", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessfullyRevoked {
+            get {
+                return ResourceManager.GetString("SuccessfullyRevoked", resourceCulture);
+            }
+        }
     }
 }

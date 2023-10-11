@@ -1,6 +1,5 @@
 using CleanArchitectureTemplate.Application.DTOs.Users;
 using CleanArchitectureTemplate.Application.UseCases.Auth.Commands;
-using CleanArchitectureTemplate.Domain.Aggregates.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitectureTemplate.WebApi.Controllers;
