@@ -9,13 +9,14 @@ using CleanArchitectureTemplate.Domain.Shared;
 using CleanArchitectureTemplate.Domain.Shared.Lookups;
 using CleanArchitectureTemplate.Infrastructure.Persistence.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace CleanArchitectureTemplate.Infrastructure.Persistence.Contexts;
 
-public class ApplicationDbContext : DbContext, IUnitOfWork
+public class ApplicationDbContext : IdentityDbContext<User,Role,long>, IUnitOfWork
 {
     private readonly IMediator _mediator;
     private IDbContextTransaction _currentTransaction;
@@ -31,9 +32,8 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
         modelBuilder.Ignore<DomainEvent>();
     }
 
@@ -121,15 +121,6 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
 
             await _mediator.DispatchDomainEventsAsync(domainEvents);
             await transaction.CommitAsync(cancellationToken);
-            //try
-            //{
-            //    await _mediator.DispatchDomainEventsAsync(postDomainEvents);
-            //}
-            //catch
-            //{
-            //    // pass
-            //    // post domain events should not affect on transaction
-            //}
         }
         catch
         {
@@ -259,10 +250,6 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
         var domainEntities = ChangeTracker
             .Entries<RegularEntity>()
             .Where(x => x.Entity.DomainEvents != null && x.Entity.DomainEvents.Any());
-
-        //var domainEvents = onlyPre
-        //    ? domainEntities.SelectMany(x => x.Entity.DomainEvents).Where(x => x is PreDomainEvent)
-        //    : domainEntities.SelectMany(x => x.Entity.DomainEvents).Where(x => x is PostDomainEvent);
 
         return domainEntities.SelectMany(x => x.Entity.DomainEvents).ToList();
     }

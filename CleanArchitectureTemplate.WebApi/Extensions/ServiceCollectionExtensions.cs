@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.Json;
 using CleanArchitectureTemplate.Application.Behaviours;
 using CleanArchitectureTemplate.Application.Converters;
@@ -16,6 +17,7 @@ using FluentValidation;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace CleanArchitectureTemplate.WebApi.Extensions;
@@ -71,11 +73,47 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Setting configuration for protected Web Api (Azure Ad)
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
-        //todo
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddCookie(x =>
+            {
+                x.Cookie.Name = "authorization";
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+        
+                var securityKey = new ECDsaSecurityKey(ECDsa.Create(ECCurve.NamedCurves.nistP521));
+                securityKey.ECDsa.ImportFromPem(configuration["JWT:PrivateKey"]);
+                
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = configuration["JWT:ValidAudience"],
+                    ValidIssuer = configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = securityKey
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey("authorization"))
+                        {
+                            context.Token = context.Request.Cookies["authorization"];
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+            options.AddPolicy("CanPurge", policy => policy.RequireRole(Domain.Enums.Role.Admin.ToString("F"))));
 
         return services;
     }
@@ -121,18 +159,15 @@ public static class ServiceCollectionExtensions
 
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo
+            c.SwaggerDoc("v1",new OpenApiInfo{Title="TemplateAPI",Version = "v1"});
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
             {
-                Version = "v1",
-                Title = "Fimpact API",
-                Description = "Test API",
-            });
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
                 Name = "Authorization",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
                 In = ParameterLocation.Header,
-                Scheme = "Bearer"
+                Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
             });
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -143,12 +178,9 @@ public static class ServiceCollectionExtensions
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = "Bearer"
-                        },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header
+                        }
                     },
-                    new List<string>()
+                    new string[] {}
                 }
             });
         });
@@ -207,7 +239,7 @@ public static class ServiceCollectionExtensions
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IUserRepository, UserRepository>();
+        // services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 

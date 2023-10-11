@@ -2,10 +2,11 @@
 using CleanArchitectureTemplate.Domain.Attributes;
 using CleanArchitectureTemplate.Domain.SeedWork;
 using CleanArchitectureTemplate.Domain.Shared;
+using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitectureTemplate.Domain.Aggregates.Users;
 
-public class User : BaseEntity<long>, IAggregateRoot
+public class User : IdentityUser<long>, IAggregateRoot
 {
     [Required]
     [MaxLength(128)]
@@ -17,10 +18,6 @@ public class User : BaseEntity<long>, IAggregateRoot
     [SearchColumn]
     public string LastName { get; protected set; }
 
-    [Required]
-    [MaxLength(128)]
-    public string Email { get; protected set; }
-
     public string FullName => $"{LastName} {FirstName}";
 
     public virtual ICollection<AuditLog> AuditLogs { get; protected set; }
@@ -31,8 +28,9 @@ public class User : BaseEntity<long>, IAggregateRoot
         long id,
         string firstName,
         string lastName,
-        string email) : base(id)
+        string email) : base(email)
     {
+        Id = id;
         FirstName = firstName;
         LastName = lastName;
         Email = email;

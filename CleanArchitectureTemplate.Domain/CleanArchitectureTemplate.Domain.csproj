@@ -8,7 +8,10 @@
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="11.1.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.12" />
+      <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.0.2" />
       <PackageReference Include="Microsoft.OpenApi" Version="1.6.9" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.2" />
       <PackageReference Include="System.Linq.Expressions" Version="4.3.0" />
       <PackageReference Include="System.Reflection.Emit" Version="4.7.0" />
     </ItemGroup>

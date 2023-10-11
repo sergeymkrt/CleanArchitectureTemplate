@@ -1,9 +1,12 @@
 using System.Reflection;
+using CleanArchitectureTemplate.Domain.Aggregates.Users;
 using CleanArchitectureTemplate.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 
 namespace CleanArchitectureTemplate.Infrastructure.Persistence.Extensions;
 
@@ -44,6 +47,11 @@ public static class ServiceCollectionExtensions
                     .LogTo(Console.WriteLine, LogLevel.Information);
             }
         });
+
+        services.AddIdentityCore<User>()
+            .AddRoles<Role>()
+            .AddEntityFrameworkStores<TContext>();
+            // .AddTokenProvider("Default", typeof(TotpSecurityStampBasedTokenProvider<User>));
 
         return services;
     }
