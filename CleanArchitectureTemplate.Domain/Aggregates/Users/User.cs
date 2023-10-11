@@ -46,6 +46,11 @@ public class User : IdentityUser<long>, IAggregateRoot
         Email = email;
     }
 
+    public User(string email)
+    {
+        Email = email;
+    }
+
     public void SetName(
         string firstName,
         string lastName)

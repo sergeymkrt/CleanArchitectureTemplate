@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using CleanArchitectureTemplate.Domain.Aggregates.Users;
 using CleanArchitectureTemplate.Domain.Services.External;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,15 +17,13 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public string GenerateJwtToken(string email, long id, string firstName, string lastName, string[] roles)
+    public string GenerateJwtToken(User user, string[] roles)
     {
         var claims = new List<Claim>
         {
-            new(ClaimTypes.Email, email),
-            new(ClaimTypes.NameIdentifier, id.ToString()),
-            new(ClaimTypes.Name, $"{firstName} {lastName}"),
-            new(ClaimTypes.GivenName, firstName),
-            new(ClaimTypes.Surname, lastName)
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
         };
         
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

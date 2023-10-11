@@ -6,5 +6,5 @@ namespace CleanArchitectureTemplate.WebApi.Controllers;
 [ApiController]
 public class TodosController : BaseApiController
 {
-
+    
 }
