@@ -2,6 +2,7 @@ using System.Data;
 using System.Reflection;
 using System.Text.Json;
 using CleanArchitectureTemplate.Application.DTOs;
+using CleanArchitectureTemplate.Domain.Aggregates.ToDos;
 using CleanArchitectureTemplate.Domain.Aggregates.Users;
 using CleanArchitectureTemplate.Domain.Extensions;
 using CleanArchitectureTemplate.Domain.SeedWork;
@@ -40,6 +41,8 @@ public class ApplicationDbContext : IdentityDbContext<User,Role,long>, IUnitOfWo
     #region Models
     public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<Todo> Todos { get; set; }
     #endregion
 
     #region Lookup models

@@ -29,8 +29,6 @@
 
     <ItemGroup>
       <Folder Include="DomainEventHandlers\" />
-      <Folder Include="UseCases\Todos\Commands\" />
-      <Folder Include="UseCases\Todos\Queries\" />
     </ItemGroup>
 
 </Project>

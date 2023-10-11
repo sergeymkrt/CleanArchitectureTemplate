@@ -4,6 +4,7 @@ using System.Text.Json;
 using CleanArchitectureTemplate.Application.Behaviours;
 using CleanArchitectureTemplate.Application.Converters;
 using CleanArchitectureTemplate.Application.Interfaces.Services;
+using CleanArchitectureTemplate.Domain.Aggregates.ToDos;
 using CleanArchitectureTemplate.Domain.Aggregates.Users;
 using CleanArchitectureTemplate.Domain.Services;
 using CleanArchitectureTemplate.Domain.Services.External;
@@ -239,13 +240,13 @@ public static class ServiceCollectionExtensions
     
     private static IServiceCollection AddRepositories(this IServiceCollection services)
     {
-        // services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ITodoRepository, TodoRepository>();
         return services;
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        // services.AddScoped<ILookupService, LookupService>();
+        services.AddScoped<IAuthService, AuthService>();
         return services;
     }
 
