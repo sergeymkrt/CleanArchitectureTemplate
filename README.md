@@ -8,7 +8,7 @@ Not yet complete
 - [x] Structure
 - [x] Docker-compose with postgres
 - [x] Migrations
-- [ ] User Authentication and Authorization
-- [ ] Http-Only Cookies
+- [x] User Authentication and Authorization
+- [x] Http-Only Cookies
 - [ ] Todo Examples
 
